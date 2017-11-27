@@ -1,6 +1,0 @@
-<skip_characters>
-    <character name=" "/>
-    <character name="."/>
-    <character name=":"/>
-    <character name="-"/>
-</skip_characters>
