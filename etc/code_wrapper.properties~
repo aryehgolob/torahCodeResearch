@@ -1,0 +1,6 @@
+#code_wrapper.mode=produce_matrix
+code_wrapper.mode=test
+#code_wrapper.mode=check_frequency_measure
+#code_wrapper.mode=init
+
+code_wrapper.tanach.dir=C:/dev/code/codes/torahCodeResearch/torah/Projects/TextSources/tanach/corrected

@@ -1,0 +1,156 @@
+<letters>
+	<letter name="aleph">
+		<numerical_value value="1"/>
+		<character_translation value="A"/>
+	</letter>
+
+	<letter name="bais">
+		<numerical_value value="2"/>
+		<character_translation value="B"/>
+	</letter>
+
+	<letter name="gimel">
+		<numerical_value value="3"/>
+		<character_translation value="G"/>
+	</letter>
+
+	<letter name="daled">
+		<numerical_value value="4"/>
+		<character_translation value="D"/>
+	</letter>
+
+	<letter name="hey">
+		<numerical_value value="5"/>
+		<character_translation value="H"/>
+	</letter>
+
+	<letter name="vav">
+		<numerical_value value="6"/>
+		<character_translation value="V"/>
+	</letter>
+
+	<letter name="zayin">
+		<numerical_value value="7"/>
+		<character_translation value="Z"/>
+	</letter>
+
+	<letter name="ches">
+		<numerical_value value="8"/>
+		<character_translation value="X"/>
+	</letter>
+
+	<letter name="tes">
+		<numerical_value value="9"/>
+		<character_translation value="+"/>
+	</letter>
+
+	<letter name="yud">
+		<numerical_value value="10"/>
+		<character_translation value="Y"/>
+	</letter>
+
+	<letter name="caf">
+		<numerical_value value="20"/>
+		<character_translation value="K"/>
+	</letter>
+
+	<letter name="chaf">
+		<numerical_value value="20"/>
+		<character_translation value="K"/>
+	</letter>
+
+	<letter name="chaf_sofit">
+		<numerical_value value="20"/>
+		<character_translation value="k"/>
+	</letter>
+
+	<letter name="lamed">
+		<numerical_value value="30"/>
+		<character_translation value="L"/>
+	</letter>
+
+	<letter name="mem">
+		<numerical_value value="40"/>
+		<character_translation value="M"/>
+	</letter>
+
+	<letter name="mem_sofit">
+		<numerical_value value="40"/>
+		<character_translation value="m"/>
+	</letter>
+
+	<letter name="nun">
+		<numerical_value value="50"/>
+		<character_translation value="N"/>
+	</letter>
+
+	<letter name="nun_sofit">
+		<numerical_value value="50"/>
+		<character_translation value="n"/>
+	</letter>
+
+	<letter name="samech">
+		<numerical_value value="60"/>
+		<character_translation value="$"/>
+	</letter>
+
+	<letter name="ayin">
+		<numerical_value value="70"/>
+		<character_translation value="O"/>
+	</letter>
+
+	<letter name="pey">
+		<numerical_value value="80"/>
+		<character_translation value="P"/>
+	</letter>
+
+	<letter name="phay">
+		<numerical_value value="80"/>
+		<character_translation value="P"/>
+	</letter>
+
+	<letter name="phay_sofit">
+		<numerical_value value="80"/>
+		<character_translation value="p"/>
+	</letter>
+
+	<letter name="tzadi">
+		<numerical_value value="90"/>
+		<character_translation value="C"/>
+	</letter>
+
+	<letter name="tzadi_sofit">
+		<numerical_value value="90"/>
+		<character_translation value="c"/>
+	</letter>
+
+	<letter name="kuf">
+		<numerical_value value="100"/>
+		<character_translation value="Q"/>
+	</letter>
+
+	<letter name="raish">
+		<numerical_value value="200"/>
+		<character_translation value="R"/>
+	</letter>
+
+	<letter name="shin">
+		<numerical_value value="300"/>
+		<character_translation value="S"/>
+	</letter>
+
+	<letter name="sin">
+		<numerical_value value="300"/>
+		<character_translation value="s"/>
+	</letter>
+
+	<letter name="taf">
+		<numerical_value value="400"/>
+		<character_translation value="T"/>
+	</letter>
+
+	<letter name="saf">
+		<numerical_value value="400"/>
+		<character_translation value="T"/>
+	</letter>
+</letters>
