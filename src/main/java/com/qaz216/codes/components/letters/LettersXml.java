@@ -19,13 +19,13 @@ import com.qaz216.codes.CodeWrapper;
 public class LettersXml {
 	private static Logger log = Logger.getLogger(LettersXml.class);	
 	
-	private Map<String, Letter> _letterMap = new HashMap<String, Letter>();
+	private Map<String, Letter> letterMap = new HashMap<String, Letter>();
 
-	private String _fileName = null;
+	private String fileName = null;
 	private Set<String> _charSet = new HashSet<String>();
 
 	public LettersXml(String fileName) {
-		this._fileName = fileName;
+		this.fileName = fileName;
 		this.parse();
 	}
 	
@@ -47,10 +47,10 @@ public class LettersXml {
 		Set<Integer> set = new HashSet<Integer>();
 		List<Integer> returnList = new ArrayList<Integer>();
 		
-		Iterator<String> letterIter = this._letterMap.keySet().iterator();
+		Iterator<String> letterIter = this.letterMap.keySet().iterator();
 		while(letterIter.hasNext()) {
 			String letterString = letterIter.next();
-			Letter letter = this._letterMap.get(letterString);
+			Letter letter = this.letterMap.get(letterString);
 			int letterNumber = letter.getNumInt();
 			Integer num = new Integer(letterNumber);
 			if(!set.contains(num)) {
@@ -64,12 +64,12 @@ public class LettersXml {
 	}
 	
 	public int[] getLetterToNumberArray() {
-		int[] returnArray = new int[this._letterMap.size()];
-		Iterator<String> letterIter = this._letterMap.keySet().iterator();
+		int[] returnArray = new int[this.letterMap.size()];
+		Iterator<String> letterIter = this.letterMap.keySet().iterator();
 		int x = 0;
 		while(letterIter.hasNext()) {
 			String letterString = letterIter.next();
-			Letter letter = this._letterMap.get(letterString);
+			Letter letter = this.letterMap.get(letterString);
 			int letterNumber = letter.getNumInt();
 			returnArray[x] = letterNumber;
 			x++;
@@ -79,24 +79,24 @@ public class LettersXml {
 	
 	public Letter getLetter(char thisChar) {
 		//log.debug("aryeh this char: "+thisChar);
-		if(this._letterMap == null) {
+		if(this.letterMap == null) {
 			log.error("letter map is null ...");
 			return null;
 		}
 		
 		String charString = String.valueOf(thisChar).trim();
-		Letter letter = this._letterMap.get(charString);
+		Letter letter = this.letterMap.get(charString);
 		if(letter == null) {
 			//log.error("letter is null ...");
 			return null;
 
 		}
-		return this._letterMap.get(String.valueOf(thisChar));
+		return this.letterMap.get(String.valueOf(thisChar));
 	}
 
 	private void parse() {
 		SAXBuilder builder = new SAXBuilder();
-		File xmlFile = new File(this._fileName);
+		File xmlFile = new File(this.fileName);
 		
 		try {
 			Document document = (Document) builder.build(xmlFile);
@@ -113,7 +113,7 @@ public class LettersXml {
 				String charTrans = letterElem.getChild("character_translation").getAttributeValue("value").trim();
 				this._charSet.add(charTrans);
 				Letter letter = new Letter(name, numValue, charTrans);
-				this._letterMap.put(charTrans, letter);
+				this.letterMap.put(charTrans, letter);
 				//log.debug("golob name: "+name+" value: "+numValue+" char trans: "+charTrans);
 						
 			}

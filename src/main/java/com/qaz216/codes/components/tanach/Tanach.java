@@ -21,48 +21,30 @@ import com.qaz216.codes.measures.FrequencyMeasure;
 public class Tanach {
 	private static Logger log = Logger.getLogger(Tanach.class);	
 	
-	private String _dir = null;
+	private String dir = null;
 	
-	private List<BookLine> _lineList = new ArrayList<BookLine>();
+	private List<BookLine> lineList = new ArrayList<BookLine>();
 	
 	// Letter list intended for initial scan.  We iterate through this and 
 	// then once we hit a target letter we begin a sub-scan to attempt to find 
 	// and ELS match
-	private List<Letter> _letterList = new ArrayList<Letter>();
+	private List<Letter> letterList = new ArrayList<Letter>();
 
 	// This data structure is paried w/ _letterList and is an exact clone.
 	// Once we hit a target letter this data structure is used for the subscan.
 
-	private List<Letter> _scanList = null;
+	private List<Letter> scanList = null;
 	// book -> lines
-	private Map<String, List<BookLine>> _bookLineMap = new HashMap<String, List<BookLine>>();
-	private Map<String, Book> _bookMap = new HashMap<String, Book>();
+	private Map<String, List<BookLine>> bookLineMap = new HashMap<String, List<BookLine>>();
+	//private Map<String, Book> _bookMap = new HashMap<String, Book>();
 	
-	private Map<String, Integer> _letterCountMap = new HashMap<String, Integer>();
+	private Map<String, Integer> letterCountMap = new HashMap<String, Integer>();
 
-	private LettersXml _lettersXml = null;
-	private SkipCharactersXml _skipCharXml = null;
-
-	public Tanach(String dir) {
-		this._dir = dir;
-	}
-	
-	public List<Letter> getLetterList() {
-		return this._letterList;
-	}
-
-	public Tanach(String dir, LettersXml letters) {
-		this._dir = dir;
-		this._lettersXml = letters;
-	}
-
-	public Tanach(String dir, LettersXml letters, SkipCharactersXml skipCharXml) {
-		this._dir = dir;
-		this._lettersXml = letters;
-		this._skipCharXml = skipCharXml;
-	}
+	private LettersXml lettersXml = null;
+	private SkipCharactersXml skipCharXml = null;
 
 	private static final List<Book> bookList = new ArrayList<Book>();
+
 	private static final Map<String, Book> bookMap = new HashMap<String, Book>();
 	static {
 		Book genesisBook = new Book(Book.GENESIS_NAME, Book.GENESIS_CODE, Book.GENESIS_FILE_NAME);
@@ -83,19 +65,38 @@ public class Tanach {
 		bookMap.put(Book.NUMBERS_NAME, numbersBook);
 		bookMap.put(Book.DEUTERONOMY_NAME, numbersBook);
 	}
+
+	public Tanach(String dir) {
+		this.dir = dir;
+	}
 	
+	public List<Letter> getLetterList() {
+		return this.letterList;
+	}
+
+	public Tanach(String dir, LettersXml letters) {
+		this.dir = dir;
+		this.lettersXml = letters;
+	}
+
+	public Tanach(String dir, LettersXml letters, SkipCharactersXml skipCharXml) {
+		this.dir = dir;
+		this.lettersXml = letters;
+		this.skipCharXml = skipCharXml;
+	}
+
 	public static Book getBook(String name) {
 		return bookMap.get(name);
 	}
 	
 	public void initializeLetterProperties() {
-		List<Integer> numList = this._lettersXml.getUniqueLetterToNumberList();
+		List<Integer> numList = this.lettersXml.getUniqueLetterToNumberList();
 		for(Integer num : numList) {
 			//log.debug("this num: " + num);
 			int counter = 1;
 			boolean haveFoundNumber = false;
 			int letterNumber = num.intValue();
-			for(Letter letter : this._letterList) {
+			for(Letter letter : this.letterList) {
 				int thisLetterNumber = letter.getNumInt();
 				//log.debug("this letter number: "+thisLetterNumber);
     		
@@ -145,11 +146,12 @@ public class Tanach {
 		for(Book book : bookList) {
 			String name = book.getName();
 			String code = book.getCode();
+			log.debug("book code: "+book.getCode());
 			String fileName = this.getFullyQualifiedFileName(book.getFileName());
-			List<BookLine> bookLineList = this._bookLineMap.get(name);
+			List<BookLine> bookLineList = this.bookLineMap.get(name);
 			if(bookLineList == null) {
 				bookLineList = new ArrayList<BookLine>();
-				this._bookLineMap.put(name, bookLineList);
+				this.bookLineMap.put(name, bookLineList);
 			}
 			try {
 				FileInputStream fis = new FileInputStream(fileName);
@@ -159,10 +161,10 @@ public class Tanach {
 				while((rawLine=br.readLine()) != null) {
 					rawLine = rawLine.trim();
 					BookLine line = new BookLine(rawLine);
-					log.debug("line: "+line);
+					//log.debug("line: "+line);
 					book.addLine(line);
 					bookLineList.add(line);
-					this._lineList.add(line);
+					this.lineList.add(line);
 					
 					String lineText = line.getLineText();
 					char[] lineTextCharArray = lineText.toCharArray();
@@ -170,15 +172,18 @@ public class Tanach {
 						if(freeze) {
 							break;
 						}
-						if(this._skipCharXml.skip(thisChar)) {
+						if(this.skipCharXml.skip(thisChar)) {
 							// we can safely skip this character
 							//log.debug("skip thisChar: "+thisChar);
 							continue;
 						}
 						
-						if(this._lettersXml.isValidCharacter(thisChar)) {
+						if(this.lettersXml.isValidCharacter(thisChar)) {
 							//log.debug("valid thisChar: "+thisChar+" book: "+book.getName());
-							Letter letter = this._lettersXml.getLetter(thisChar);
+							Letter letter = this.lettersXml.getLetter(thisChar);
+							this.letterList.add(letter);
+							count++;
+							/*
 							String numValue = letter.getNumValue();
 							Letter uniqueLetter = (Letter) letter.clone();
 							uniqueLetter.setVerseId(line.toString());
@@ -195,7 +200,7 @@ public class Tanach {
 							
 							//log.debug("num value: "+numValue+" this char: "+thisChar+" line text: "+line.toString());
 							this._letterList.add(uniqueLetter);
-							count++;
+							*/
 						}
 						else {
 							log.error("\n");
@@ -225,11 +230,16 @@ public class Tanach {
 			
 			
 			// cloning letter list (target scan list)
-			this._scanList = new ArrayList<Letter>(this._letterList.size());
-			for(Letter letter : this._letterList) {
-				this._scanList.add((Letter) letter.clone());
+			/*
+			this.scanList = new ArrayList<Letter>(this.letterList.size());
+			for(Letter letter : this.letterList) {
+				this.scanList.add((Letter) letter.clone());
 			}
+			*/
 		}
+		
+		//log.debug("scan list size: "+this.scanList.size());
+		log.debug("size: "+this.letterList.size());
 
 		/*
 		Iterator<String> countIter = this._letterCountMap.keySet().iterator();
@@ -244,7 +254,6 @@ public class Tanach {
 		}
 		log.debug("totalCount "+totalCount);
 		*/
-		log.debug("count "+count);
 	}
 
 	public void intitialize() {
@@ -343,19 +352,19 @@ public class Tanach {
 
 	public void applyFrequencyMeasure2(List<FrequencyMeasure> measureList, int lowerBound, int upperBound) {
 		int measureListSize = measureList.size();
-		int letterListSize = this._letterList.size();
+		int letterListSize = this.letterList.size();
 		int currentMeasureIndex = 0;
 		FrequencyMeasure measure = measureList.get(currentMeasureIndex);
 		int measureNum = measure.getNumber();
 		int currentCount = lowerBound;
-		for(int i = 0; i < this._letterList.size(); i++) {
-			Letter letter = this._letterList.get(i);
+		for(int i = 0; i < this.letterList.size(); i++) {
+			Letter letter = this.letterList.get(i);
 			int letterNum = letter.getNumInt();
 			if(measureNum == letterNum) {
 				//log.debug("letter num: "+letterNum+" count: "+i);
 				int nextIndex = i + currentCount;
 				while(nextIndex <= letterListSize) {
-					Letter nextLetter = this._scanList.get(nextIndex);
+					Letter nextLetter = this.scanList.get(nextIndex);
 					int nextLetterNum = nextLetter.getNumInt();
 					if(measureNum == nextLetterNum && currentMeasureIndex < measureListSize) {
 						currentMeasureIndex++;
@@ -397,10 +406,10 @@ public class Tanach {
 			String name = book.getName();
 			String code = book.getCode();
 			String fileName = this.getFullyQualifiedFileName(book.getFileName());
-			List<BookLine> bookLineList = this._bookLineMap.get(name);
+			List<BookLine> bookLineList = this.bookLineMap.get(name);
 			if(bookLineList == null) {
 				bookLineList = new ArrayList<BookLine>();
-				this._bookLineMap.put(name, bookLineList);
+				this.bookLineMap.put(name, bookLineList);
 			}
 			try {
 				FileInputStream fis = new FileInputStream(fileName);
@@ -414,7 +423,7 @@ public class Tanach {
 					//log.debug("line: "+line);
 					book.addLine(line);
 					bookLineList.add(line);
-					this._lineList.add(line);
+					this.lineList.add(line);
 					
 					String lineText = line.getLineText();
 					log.debug("line: "+line);
@@ -437,7 +446,7 @@ public class Tanach {
 	}
 
 	public void produceBasicMatrix(String book, int skipInterval, int verseCount, char startLetter) {
-		List<BookLine> lineBufferList = this._bookLineMap.get(book);
+		List<BookLine> lineBufferList = this.bookLineMap.get(book);
 		if(lineBufferList == null) {
 			log.error("No book for: "+book);
 			return;
@@ -490,7 +499,7 @@ public class Tanach {
 	}
 	
 	public void skip(String book, int skipInterval, int verseCount, char startLetter) {
-		List<BookLine> lineBufferList = this._bookLineMap.get(book);
+		List<BookLine> lineBufferList = this.bookLineMap.get(book);
 		if(lineBufferList == null) {
 			log.error("No book for: "+book);
 			return;
@@ -542,10 +551,10 @@ public class Tanach {
 			String name = book.getName();
 			String code = book.getCode();
 			String fileName = this.getFullyQualifiedFileName(book.getFileName());
-			List<BookLine> bookLineList = this._bookLineMap.get(name);
+			List<BookLine> bookLineList = this.bookLineMap.get(name);
 			if(bookLineList == null) {
 				bookLineList = new ArrayList<BookLine>();
-				this._bookLineMap.put(name, bookLineList);
+				this.bookLineMap.put(name, bookLineList);
 			}
 			try {
 				FileInputStream fis = new FileInputStream(fileName);
@@ -559,14 +568,14 @@ public class Tanach {
 					//log.debug("line: "+line);
 					book.addLine(line);
 					bookLineList.add(line);
-					this._lineList.add(line);
+					this.lineList.add(line);
 
 					String lineText = line.getLineText();
 					char[] charArray = lineText.toCharArray();
 					for(char thisChar : charArray) {
-						if(this._lettersXml.isValidCharacter(thisChar)) {
-							Letter letter = this._lettersXml.getLetter(thisChar);
-							//log.debug("thisChar: "+letter.getCharTrans());
+						if(this.lettersXml.isValidCharacter(thisChar)) {
+							Letter letter = this.lettersXml.getLetter(thisChar);
+							log.debug("thisChar: "+letter.getCharTrans());
 						}
 					}
 				}
@@ -583,6 +592,6 @@ public class Tanach {
 	}
 	
 	public String getFullyQualifiedFileName(String name) {
-		return this._dir + "/" + name;
+		return this.dir + "/" + name;
 	}
 }

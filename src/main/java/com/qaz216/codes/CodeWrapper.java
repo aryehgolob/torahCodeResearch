@@ -107,11 +107,22 @@ public class CodeWrapper {
 		else if(mode.equals("init")) {
 			codeWrapper.initializeTanach();
 		}
+		else if(mode.equals("get_seq_word")) {
+			codeWrapper.getSequenceWord();
+		}
         
         log.debug("mode: "+mode);
     }
     
-    public void getFibonacciNumbers() {
+    private void getSequenceWord() {
+    	log.debug("get sequence word ...");
+    	this._tanach = new Tanach(this._tanachDir, this._lettersXml, this._skipCharXml);
+    	this._tanach.buildLetterMatrix();
+		
+	}
+
+
+	public void getFibonacciNumbers() {
     	this._tanach = new Tanach(this._tanachDir, this._lettersXml, this._skipCharXml);
     	this._tanach.buildLetterMatrix();
     	
